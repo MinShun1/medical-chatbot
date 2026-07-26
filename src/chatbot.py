@@ -1,14 +1,16 @@
 import re
-
 from google import genai
 
 from src.prompt import SYSTEM_PROMPT
 from src.retrieval import Retriever
+from src.embedding import initialize_client
 
 
 class MedicalChatbot:
 
     def __init__(self, api_key, index_path, metadata_path):
+
+        initialize_client(api_key)
 
         self.client = genai.Client(api_key=api_key)
 
@@ -19,10 +21,6 @@ class MedicalChatbot:
 
     def ask(self, question, k=7):
 
-        # =====================
-        # Exact filename lookup
-        # =====================
-
         match = re.search(r"(med_doc_[\w\d_]+\.jpg)", question)
 
         if match:
@@ -30,17 +28,14 @@ class MedicalChatbot:
             filename = match.group(1)
 
             docs = [
-                x
-                for x in self.retriever.metadata
+                x for x in self.retriever.metadata
                 if x["filename"] == filename
             ]
 
             context = ""
 
             for doc in docs:
-
-                context += doc["text"]
-                context += "\n\n"
+                context += doc["text"] + "\n\n"
 
         else:
 
@@ -59,7 +54,7 @@ Question:
 """
 
         response = self.client.models.generate_content(
-            model="gemini-3.5-flash-lite",
+            model="gemini-2.5-flash",
             contents=prompt
         )
 
