@@ -15,20 +15,21 @@ class Retriever:
             self.metadata = pickle.load(f)
 
     def retrieve(self, question, k=7):
-
+    
         query_vector = embed_text(question)
-
+    
         query = np.array([query_vector]).astype("float32")
-
+    
         distances, indices = self.index.search(query, k)
-
+    
         retrieved_docs = []
-
+    
         for idx in indices[0]:
-
             retrieved_docs.append(self.metadata[idx])
-
-        return retrieved_docs
+    
+        context = self.build_context(retrieved_docs)
+    
+        return retrieved_docs, context
 
     def build_context(self, docs):
 
