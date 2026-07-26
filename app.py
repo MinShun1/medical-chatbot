@@ -19,8 +19,8 @@ st.set_page_config(
 def load_bot():
     return MedicalChatbot(
         api_key=st.secrets["GEMINI_API_KEY"],
-        index_path="data/medical_index.faiss",
-        metadata_path="data/metadata.pkl"
+        index_path="index/medical_index.faiss",
+        metadata_path="index/metadata.pkl"
     )
 
 bot = load_bot()
