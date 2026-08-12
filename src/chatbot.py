@@ -5,6 +5,7 @@ from src.prompt import SYSTEM_PROMPT
 from src.retrieval import Retriever
 from src.embedding import initialize_client
 
+
 class MedicalChatbot:
 
     def __init__(self, api_key, index_path, metadata_path):
@@ -18,29 +19,29 @@ class MedicalChatbot:
             metadata_path=metadata_path
         )
 
-   def ask(self, question, k=7):
+    def ask(self, question, k=7):
 
-    match = re.search(r"(med_doc_[\w\d_]+\.jpg)", question)
+        match = re.search(r"(med_doc_[\w\d_]+\.jpg)", question)
 
-    if match:
+        if match:
 
-        filename = match.group(1)
+            filename = match.group(1)
 
-        docs = [
-            x for x in self.retriever.metadata
-            if x["filename"] == filename
-        ]
+            docs = [
+                x for x in self.retriever.metadata
+                if x["filename"] == filename
+            ]
 
-        context = ""
+            context = ""
 
-        for doc in docs:
-            context += doc["text"] + "\n\n"
+            for doc in docs:
+                context += doc["text"] + "\n\n"
 
-    else:
+        else:
 
-        docs, context = self.retriever.retrieve(question, k)
+            docs, context = self.retriever.retrieve(question, k)
 
-    prompt = f"""
+        prompt = f"""
 {SYSTEM_PROMPT}
 
 Retrieved Documents:
@@ -52,16 +53,19 @@ Question:
 {question}
 """
 
-    try:
-        response = self.client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
-        )
+        try:
 
-        print("GEMINI RESPONSE:", response)
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
+            )
 
-        return response.text
+            print("GEMINI RESPONSE:", response)
 
-    except Exception as e:
-        print("GEMINI ERROR:", repr(e))
-        raise e
+            return response.text
+
+        except Exception as e:
+
+            print("GEMINI ERROR:", repr(e))
+
+            raise e
