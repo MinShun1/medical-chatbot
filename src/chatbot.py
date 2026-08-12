@@ -5,6 +5,12 @@ from src.prompt import SYSTEM_PROMPT
 from src.retrieval import Retriever
 from src.embedding import initialize_client
 
+-----
+client = genai.Client(api_key=api_key)
+
+for model in client.models.list():
+    print(model.name)
+----
 
 class MedicalChatbot:
 
