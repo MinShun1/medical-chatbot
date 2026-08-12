@@ -32,52 +32,50 @@ class MedicalChatbot:
         )
 
     def ask(self, question, k=7):
-
+    
         match = re.search(r"(med_doc_[\w\d_]+\.jpg)", question)
-
+    
         if match:
-
+    
             filename = match.group(1)
-
+    
             docs = [
                 x for x in self.retriever.metadata
                 if x["filename"] == filename
             ]
-
+    
             context = ""
-
+    
             for doc in docs:
                 context += doc["text"] + "\n\n"
-
+    
         else:
-
+    
             docs, context = self.retriever.retrieve(question, k)
-
+    
         prompt = f"""
-{SYSTEM_PROMPT}
-
-Retrieved Documents:
-
-{context}
-
-Question:
-
-{question}
-"""
-
+    {SYSTEM_PROMPT}
+    
+    Retrieved Documents:
+    
+    {context}
+    
+    Question:
+    
+    {question}
+    """
+    
         try:
-
+    
             response = self.client.models.generate_content(
-                model="gemini-flash-latest",
+                model="gemini-3.1-flash-lite",
                 contents=prompt
             )
-
-            print("GEMINI RESPONSE:", response)
-
+    
             return response.text
-
+    
         except Exception as e:
-
+    
             print("GEMINI ERROR:", repr(e))
-
+    
             raise e
