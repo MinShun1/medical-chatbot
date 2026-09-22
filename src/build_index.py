@@ -51,5 +51,3 @@ for doc in documents:
     })
 
 save_metadata(metadata, "data/metadata.pkl")
-
-print("Done!")
