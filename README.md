@@ -425,18 +425,38 @@ The current implementation has several limitations:
 
 ## Future Development
 
-Potential improvements include:
+Potential improvements and extensions include:
 
-* Conversational retrieval with previous-turn context
-* Hybrid lexical and semantic retrieval
-* Retrieval re-ranking
-* Improved document chunking strategies
-* Retrieval and generation evaluation metrics
-* OCR preprocessing and quality enhancement
-* Source attribution for retrieved documents
-* Document-level evidence visualization
-* Hallucination and faithfulness evaluation
+* **Local LLM Integration**
+  Integrate a locally hosted language model through a local inference server or API, reducing dependency on external LLM APIs and enabling repeated inference without per-request external API usage.
 
+* **Conversational Retrieval**
+  Incorporate previous conversation turns into the retrieval process to support context-aware follow-up questions.
+
+* **Hybrid Retrieval**
+  Combine lexical keyword-based retrieval with semantic vector search to improve retrieval performance for both exact terms and semantically related queries.
+
+* **Retrieval Re-ranking**
+  Apply a dedicated re-ranking model to refine the initial retrieval results and improve the relevance of documents provided to the language model.
+
+* **Improved Document Chunking**
+  Experiment with document-level and section-aware chunking strategies to improve retrieval granularity and contextual relevance.
+
+* **Retrieval and Generation Evaluation**
+  Introduce quantitative evaluation metrics to assess retrieval relevance, answer quality, and overall RAG performance.
+
+* **OCR Preprocessing and Quality Enhancement**
+  Improve image preprocessing and OCR pipelines to increase the quality and consistency of extracted medical information.
+
+* **Source Attribution**
+  Provide references to the retrieved medical documents used to generate each response.
+
+* **Evidence Visualization**
+  Display relevant document excerpts or extracted information as supporting evidence for generated answers.
+
+* **Hallucination and Faithfulness Evaluation**
+  Evaluate whether generated responses are sufficiently grounded in the retrieved documents and identify potential hallucinations.
+  
 ---
 
 ## Disclaimer
