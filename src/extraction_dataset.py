@@ -15,7 +15,6 @@ for _, row in ocr_df.iterrows():
 
     time.sleep(5)
 
-# Save JSON
 with open("data/extraction_results.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=4, ensure_ascii=False)
 
