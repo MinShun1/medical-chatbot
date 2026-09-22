@@ -1,20 +1,16 @@
 import streamlit as st
 from src.chatbot import MedicalChatbot
 
-# ==========================
-# Page Config
-# ==========================
 
+# Page Configuration
 st.set_page_config(
     page_title="Medical Document RAG Assistant",
     page_icon="🩺",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# ==========================
-# Load chatbot
-# ==========================
-
+# Load RAG System
 @st.cache_resource
 def load_bot():
     return MedicalChatbot(
@@ -23,40 +19,41 @@ def load_bot():
         metadata_path="index/metadata.pkl"
     )
 
+
 bot = load_bot()
 
-# ==========================
-# Sidebar
-# ==========================
 
+# Sidebar
 with st.sidebar:
 
-    st.title("🩺 Medical RAG")
+    st.title("Medical RAG Assistant")
+    st.caption("Retrieval-Augmented Generation for Medical Documents")
 
-    st.markdown("---")
+    st.divider()
 
-    st.subheader("Project")
+    st.subheader("System Overview")
 
-    st.write("""
-**OCR**
-- Tesseract
+    st.markdown("""
+**Document Processing**
+- Tesseract OCR
+- spaCy & Regex
 
-**LLM**
-- Gemini 3.5 Flash Lite
-
-**Embedding**
+**Embedding Model**
 - Gemini Embedding 001
 
 **Vector Database**
 - FAISS
 
-**Documents**
-- 1000 Medical Records
+**Language Model**
+- Gemini 3.5 Flash Lite
+
+**Knowledge Base**
+- 1,000 medical records
 """)
 
-    st.markdown("---")
+    st.divider()
 
-    st.subheader("Example Questions")
+    st.subheader("Example Queries")
 
     examples = [
         "Who is Amit Singh?",
@@ -66,47 +63,52 @@ with st.sidebar:
         "What foods are recommended for hypertension?"
     ]
 
-    for q in examples:
-        st.caption("• " + q)
+    for question in examples:
+        st.caption(f"• {question}")
 
-    st.markdown("---")
+    st.divider()
 
-    if st.button("🗑️ Clear Chat"):
+    if st.button(
+        "Clear Conversation",
+        use_container_width=True
+    ):
         st.session_state.messages = []
         st.rerun()
 
-# ==========================
-# Header
-# ==========================
 
-st.title("🩺 Medical Document RAG Assistant")
+# Main Interface
+st.title("Medical Document RAG Assistant")
 
-st.write(
-    "Ask questions about patient records or general medical information."
+st.markdown(
+    """
+Interact with a retrieval-augmented AI system to query information
+from medical records and obtain responses based on retrieved documents.
+"""
 )
 
-# ==========================
-# Chat History
-# ==========================
+st.divider()
 
+
+# Chat History
 if "messages" not in st.session_state:
     st.session_state.messages = []
+
 
 for message in st.session_state.messages:
 
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# ==========================
-# Chat Input
-# ==========================
 
+# User Input
 prompt = st.chat_input(
-    "Ask anything about the medical documents..."
+    "Enter your question about the medical records..."
 )
+
 
 if prompt:
 
+    # Store user message
     st.session_state.messages.append({
         "role": "user",
         "content": prompt
@@ -115,15 +117,27 @@ if prompt:
     with st.chat_message("user"):
         st.markdown(prompt)
 
+    # Generate response
     with st.chat_message("assistant"):
 
-        with st.spinner("Searching medical records..."):
+        with st.spinner("Retrieving relevant documents and generating response..."):
 
             answer = bot.ask(prompt)
 
         st.markdown(answer)
 
+    # Store assistant response
     st.session_state.messages.append({
         "role": "assistant",
         "content": answer
     })
+
+
+# Footer
+st.divider()
+
+st.caption(
+    "Medical Document RAG Assistant • "
+    "For educational and research purposes only. "
+    "This system does not provide medical diagnosis or treatment."
+)
